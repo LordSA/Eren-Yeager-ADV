@@ -1,5 +1,6 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from pyrogram.errors import MessageNotModified
 
 HELP_TXT = """
 <b>📚 Eren Yeager Bot Help Menu</b>
@@ -82,10 +83,8 @@ ADMIN_TXT = """
 • `/set_template` - Change the IMDb caption style.
 • `/broadcast` - Send message to all users.
 """
-
-@Client.on_message(filters.command("help"))
-async def help_command(client, message):
-    buttons = [
+def get_main_buttons():
+    return [
         [
             InlineKeyboardButton("🎬 Media & DL", callback_data="help_media"),
             InlineKeyboardButton("📂 Auto Filter", callback_data="help_filter")
@@ -98,10 +97,14 @@ async def help_command(client, message):
             InlineKeyboardButton("❌ Close", callback_data="close_data")
         ]
     ]
-    
+
+BACK_BUTTON = [[InlineKeyboardButton("🔙 Back to Menu", callback_data="help_back")]]
+
+@Client.on_message(filters.command("help"))
+async def help_command(client, message):
     await message.reply_text(
         text=HELP_TXT,
-        reply_markup=InlineKeyboardMarkup(buttons),
+        reply_markup=InlineKeyboardMarkup(get_main_buttons()),
         disable_web_page_preview=True
     )
 
@@ -109,42 +112,30 @@ async def help_command(client, message):
 async def help_callback_handler(client, query: CallbackQuery):
     data = query.data.split("_")[1]
     
-    if data == "media":
+    if data == "back":
+        text = HELP_TXT
+        buttons = get_main_buttons()
+    elif data == "media":
         text = MEDIA_TXT
+        buttons = BACK_BUTTON
     elif data == "filter":
         text = FILTER_TXT
+        buttons = BACK_BUTTON
     elif data == "autofw":
         text = AUTO_FW_TXT
+        buttons = BACK_BUTTON
     elif data == "admin":
         text = ADMIN_TXT
+        buttons = BACK_BUTTON
     else:
         text = HELP_TXT
+        buttons = get_main_buttons()
 
-    buttons = [[InlineKeyboardButton("🔙 Back to Menu", callback_data="help_back")]]
-    
-    await query.message.edit(
-        text=text,
-        reply_markup=InlineKeyboardMarkup(buttons),
-        disable_web_page_preview=True
-    )
-
-@Client.on_callback_query(filters.regex("^help_back"))
-async def help_back_handler(client, query: CallbackQuery):
-    buttons = [
-        [
-            InlineKeyboardButton("🎬 Media & DL", callback_data="help_media"),
-            InlineKeyboardButton("📂 Auto Filter", callback_data="help_filter")
-        ],
-        [
-            InlineKeyboardButton("🔄 Automation", callback_data="help_autofw"),
-            InlineKeyboardButton("🛠 Admin Cmds", callback_data="help_admin")
-        ],
-        [
-            InlineKeyboardButton("❌ Close", callback_data="close_data")
-        ]
-    ]
-    await query.message.edit(
-        text=HELP_TXT,
-        reply_markup=InlineKeyboardMarkup(buttons),
-        disable_web_page_preview=True
-    )
+    try:
+        await query.message.edit(
+            text=text,
+            reply_markup=InlineKeyboardMarkup(buttons),
+            disable_web_page_preview=True
+        )
+    except MessageNotModified:
+        pass

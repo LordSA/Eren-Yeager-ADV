@@ -95,17 +95,20 @@ pm2 start venv/bin/python3 --name eren-bot -- bot.py
 pm2 logs eren-bot
 ````
 </details>
+
 <details><summery>Deploy in Heroku</summery>
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/LordSA/Eren-Yeager-ADV)
 
 </details>
+
 <details><summery>Deploy in Render</summery>
 Preffered if you pay for it (i didn't tested in free version)
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
 
 </details>
+
 ## Commands
 
 Here are the commands, separated by who can use them.

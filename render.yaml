@@ -1,0 +1,29 @@
+services:
+  - type: work
+    name: eren-yeager-adv
+    env: python
+    buildCommand: pip3 install -r requirements.txt
+    startCommand: python bot.py
+    autoDeploy: true
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: API_ID
+        sync: false
+      - key: API_HASH
+        sync: false
+      - key: CHANNELS
+        sync: false
+      - key: ADMINS
+        sync: false
+      - key: LOG_CHANNEL
+        sync: false
+      - key: AUTH_CHANNEL
+        sync: false
+      - key: DATABASE_URI
+        sync: false
+      - key: DATABASE_NAME
+        value: "MW"
+      - key: IMDB_TEMPLATE
+        sync: false
+        value: "<b>Query: {query}</b>\n<b>IMDb Data:</b>\n\n🏷 <b>Title:</b> <a href=\"{url}\">{title}</a>\n🎭 <b>Genres:</b> {genres}\n📆 <b>Year:</b> {year}\n🌟 <b>Rating:</b> {rating} / 10\n📝 <b>Plot:</b> {plot}\n\n<b>Requested by:</b> {requestor}"

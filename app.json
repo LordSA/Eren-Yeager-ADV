@@ -1,5 +1,5 @@
 {
-    "name": "Eren-Yeager-ADV5.2.0",
+    "name": "Eren-Yeager-ADV",
     "description": "When you going to send file on telegram channel this bot will save that in database, So you can search that easily in inline mode",
     "stack": "container",
     "keywords": [
@@ -15,8 +15,8 @@
       "index",
       "inline"
     ],
-    "website": "https://github.com/LordSA/Eren-Yeager-ADV5.2.0",
-    "repository": "https://github.com/LordSA/Eren-Yeager-ADV5.2.0",
+    "website": "https://github.com/LordSA/Eren-Yeager-ADV",
+    "repository": "https://github.com/LordSA/Eren-Yeager-ADV",
     "env": {
         "BOT_TOKEN": {
             "description": "Your bot token.",
@@ -44,7 +44,7 @@
         },
         "VIDS": {
             "description": "add some telegraph link of video if you're not using pics.",
-            "required": true
+            "required": false
         },
         "LOG_CHANNEL": {
             "description": "Bot Logs,Give a channel id with -100xxxxxxx",

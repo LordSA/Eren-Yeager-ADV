@@ -96,17 +96,16 @@ pm2 logs eren-bot
 ````
 </details>
 
-<details><summery>Deploy in Heroku</summery>
+<details><summary>Deploy To Heroku</summary>
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/LordSA/Eren-Yeager-ADV)
-
 </details>
 
-<details><summery>Deploy in Render</summery>
+<details><summary>Deploy in Render</summary>
+
 Preffered if you pay for it (i didn't tested in free version)
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
-
 </details>
 
 ## Commands

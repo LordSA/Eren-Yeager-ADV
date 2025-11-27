@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from pyrogram import Client, filters, enums
 from pyrogram.errors import ChatAdminRequired, FloodWait
 from plugins.group_tools import logger
-from plugins.Tools.help_func.cust_p_filters import admin_filter
+from utils import admin_filter
 
 @Client.on_message(filters.command("purge") & admin_filter)
 async def purge(client, message):

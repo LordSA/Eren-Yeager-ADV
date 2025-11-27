@@ -5,13 +5,11 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 import re
 
-# Original English voices
 VOICES = [
     "nova", "alloy", "ash", "coral", "echo",
     "fable", "onyx", "sage", "shimmer"
 ]
 
-# Indian languages mapping for ttsmp3.com API
 INDIAN_LANGUAGES = {
     "malayalam": "Malayalam",
     "hindi": "Hindi", 
@@ -171,11 +169,8 @@ async def fetch_tts_audio(text: str, voice: str = "coral", speed: str = "1.00") 
             return audio_file, "Primary TTS"
         except Exception as e:
             print(f"Primary TTS failed: {e}")
-            # Continue to fallback
-    
-    # Use Google TTS for Malayalam and other Indian languages
+
     try:
-        # Map voice back to language name for Google TTS
         lang_for_google = voice
         if voice == "Malayalam":
             lang_for_google = "malayalam"
@@ -212,7 +207,6 @@ async def text_to_speech(client: Client, message: Message):
     Telegram bot handler for /tts command with Indian language support.
     """
     try:
-        # Check if replying to a message with text
         if not message.reply_to_message:
             return await message.reply_text(
                 "❌ Please reply to a message containing text.\n"
@@ -220,7 +214,6 @@ async def text_to_speech(client: Client, message: Message):
                 "Example: /tts malayalam, /tts hindi, /tts tamil"
             )
         
-        # Get text from replied message
         text_to_convert = None
         if message.reply_to_message.text:
             text_to_convert = message.reply_to_message.text
@@ -237,20 +230,16 @@ async def text_to_speech(client: Client, message: Message):
         if command_args:
             voice = get_voice(command_args[0])
         else:
-            # Auto-detect language if no argument provided
             detected_lang = detect_language(text_to_convert)
             if detected_lang != "english":
                 voice = get_voice(detected_lang)
                 print(f"Auto-detected language: {detected_lang}")
         
-        # Show processing message
         lang_display = voice if voice in INDIAN_LANGUAGES.values() else f"voice: {voice}"
         m = await message.reply_text(
             f"🎙️ Converting text to speech using {lang_display}\n"
             f"Text length: {len(text_to_convert)} characters"
         )
-        
-        # Generate TTS audio with fallback
         audio_file, method_used = await fetch_tts_audio(text_to_convert, voice)
         
         # Send audio file

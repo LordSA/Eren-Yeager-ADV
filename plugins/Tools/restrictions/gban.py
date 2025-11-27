@@ -1,6 +1,5 @@
 from pyrogram import Client, filters
-from utils import extract_user
-from plugins.Tools.help_func.cust_p_filters import admin_filter
+from utils import extract_user, admin_filter
 from plugins.Tools.help_func.string_handling import extract_time
 
 @Client.on_message(filters.command("gban") & admin_filter)

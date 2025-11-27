@@ -4,9 +4,9 @@ import logging
 import logging.config
 import subprocess
 import asyncio 
-from pyrogram import filters, types, Client, __version__ 
-from pyrogram.types import Message
-from info import LOG_CHANNEL, ADMINS, PM2_BOT_NAME, SESSION, API_ID, API_HASH, BOT_TOKEN, LOG_STR
+from pyrogram import Client, __version__ 
+#from pyrogram.types import Message
+from info import SESSION, API_ID, API_HASH, BOT_TOKEN, LOG_STR
 
 # Get logging configurations
 logging.config.fileConfig('logging.conf')
@@ -17,7 +17,7 @@ from pyrogram.raw.all import layer
 from database.ia_filterdb import Media
 from database.filters_mdb import filters_db
 from database.users_chats_db import db
-from utils import temp, run_shell_command
+from utils import temp
 import utils
 
 class Bot(Client):

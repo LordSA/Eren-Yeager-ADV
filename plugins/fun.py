@@ -11,8 +11,7 @@ def aesthetify(string):
         yield chr(c_ord)
 
 
-@Client.on_message(
-    filters.command(["ask"]))
+@Client.on_message(filters.command(["ask"]))
 async def aesthetic(client, message):
     status_message = await message.reply_text("What the hell do you want??\nപേടിച്ചു പോയോ ഞാൻ വെറുതേ പറഞ്ഞത")
     
@@ -31,9 +30,7 @@ async def aesthetic(client, message):
 
 DART_E_MOJI = "🎯"
 
-@Client.on_message(
-    filters.command(["throw", "dart"])
-)
+@Client.on_message(filters.command(["throw", "dart"]))
 async def throw_dart(client, message):
     rep_mesg_id = message.id
     if message.reply_to_message:
@@ -47,9 +44,7 @@ async def throw_dart(client, message):
 
 DICE_E_MOJI = "🎲"
 
-@Client.on_message(
-    filters.command(["roll", "dice"])
-)
+@Client.on_message(filters.command(["roll", "dice"]))
 async def roll_dice(client, message):
     rep_mesg_id = message.id
     if message.reply_to_message:
@@ -63,9 +58,7 @@ async def roll_dice(client, message):
 
 TRY_YOUR_LUCK = "🎰"
 
-@Client.on_message(
-    filters.command(["luck", "cownd"])
-)
+@Client.on_message(filters.command(["luck", "cownd"]))
 async def luck_cownd(client, message):
     rep_mesg_id = message.id
     if message.reply_to_message:
@@ -79,9 +72,7 @@ async def luck_cownd(client, message):
 
 GOAL_E_MOJI = "⚽"
 
-@Client.on_message(
-    filters.command(["goal", "shoot"])
-)
+@Client.on_message(filters.command(["goal", "shoot"]))
 async def shoot_goal(client, message):
     rep_mesg_id = message.id
     if message.reply_to_message:

@@ -1,7 +1,5 @@
 import random
 from pyrogram import Client, filters
-from plugins.Tools.help_func.cust_p_filters import f_owner_filter
-
 
 RUN_STRINGS = (
     "ഡാ നിന്റെ ഒക്കെ അമ്മയ്ക്കും പെങ്ങക്കും ഉള്ളതൊക്കെ തന്നാട എല്ലാർക്കും ഒള്ളത്.",

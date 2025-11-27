@@ -8,12 +8,13 @@ import requests
 
 from cachetools import TTLCache
 from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait, UserIsBlocked, PeerIdInvalid
-from info import AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, MAX_LIST_ELM, TMD_API_KEY, TMD_API_BASE, IMG_BASE_URL, DEFAULT_SETTINGS
+from info import AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, MAX_LIST_ELM, TMD_API_KEY, TMD_API_BASE, IMG_BASE_URL, DEFAULT_SETTINGS ,ADMINS
 from pyrogram.types import Message, InlineKeyboardButton, Audio, Document, Photo, Sticker, Video, VideoNote, Voice, Animation
-from pyrogram import enums
+from pyrogram import enums, filters
 from typing import List, Union, Optional, Dict, Any
 from database.users_chats_db import db
 from bs4 import BeautifulSoup
+from plugins.Tools.help_func.admin_check import admin_check
 
 
 FILE_ID_CACHE = TTLCache(maxsize=1000, ttl=3600)
@@ -420,16 +421,30 @@ def humanbytes(size):
         n += 1
     return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
 
+def f_owner_filter(filt, client, message):
+    if not message or not message.from_user:
+        return False
+    user_id = message.from_user.id
+    user_name = message.from_user.first_name
+    is_admin = user_id in ADMINS
+    if is_admin:
+        logger.debug(f"[OwnerFilter] ✅ Access GRANTED to {user_name} ({user_id})")
+        return True
+    else:
+        logger.info(f"[OwnerFilter] ❌ Access DENIED to {user_name} ({user_id}). Not in ADMINS list.")
+        return False
 
-async def run_shell_command(command):
-    """Execute shell command asynchronously"""
-    try:
-        process = await asyncio.create_subprocess_shell(
-            command,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        return stdout.decode().strip(), stderr.decode().strip()
-    except Exception as e:
-        return "", str(e)
+owner_filter = filters.create(
+    func=f_owner_filter,
+    name="OwnerFilter"
+)
+
+async def f_admin_filter(filt, client, message):
+    if message.chat.type == enums.ChatType.PRIVATE:
+        return False
+    return await admin_check(message)
+
+admin_filter = filters.create(
+    func=f_admin_filter,
+    name="AdminFilter"
+)

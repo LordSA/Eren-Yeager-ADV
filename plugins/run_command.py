@@ -70,7 +70,7 @@ RUN_STRINGS = (
 )
 
 
-@Client.on_message(filters.command("thug") & f_owner_filter)
+@Client.on_message(filters.command("thug"))
 async def thug(_, message):
     """ /runs strings """
     effective_string = random.choice(RUN_STRINGS)

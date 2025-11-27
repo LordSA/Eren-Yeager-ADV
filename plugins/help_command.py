@@ -121,7 +121,7 @@ async def help_callback_handler(client, query: CallbackQuery):
     else:
         text = HELP_TXT
 
-    buttons = [[InlineKeyboardButton("🔙 Back to Menu", callback_data="help_back")]]
+    buttons = [[InlineKeyboardButton("🔙 Back to Menu", callback_data="help")]]
     
     try:
         await query.message.edit(

@@ -2,7 +2,7 @@ import logging
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.errors import ChatAdminRequired, RightForbidden
-from plugins.Tools.help_func.cust_p_filters import admin_filter
+from utils import admin_filter
 
 logger = logging.getLogger(__name__)
 @Client.on_message(filters.command("pin") & admin_filter)

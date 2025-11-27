@@ -1,5 +1,6 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from pyrogram.errors import MessageNotModified
 
 HELP_TXT = """
 <b>📚 Eren Yeager Bot Help Menu</b>
@@ -122,11 +123,14 @@ async def help_callback_handler(client, query: CallbackQuery):
 
     buttons = [[InlineKeyboardButton("🔙 Back to Menu", callback_data="help_back")]]
     
-    await query.message.edit(
-        text=text,
-        reply_markup=InlineKeyboardMarkup(buttons),
-        disable_web_page_preview=True
-    )
+    try:
+        await query.message.edit(
+            text=text,
+            reply_markup=InlineKeyboardMarkup(buttons),
+            disable_web_page_preview=True
+        )
+    except MessageNotModified:
+        pass
 
 @Client.on_callback_query(filters.regex("^help_back"))
 async def help_back_handler(client, query: CallbackQuery):
@@ -143,8 +147,12 @@ async def help_back_handler(client, query: CallbackQuery):
             InlineKeyboardButton("❌ Close", callback_data="close_data")
         ]
     ]
-    await query.message.edit(
-        text=HELP_TXT,
-        reply_markup=InlineKeyboardMarkup(buttons),
-        disable_web_page_preview=True
-    )
+    
+    try:
+        await query.message.edit(
+            text=HELP_TXT,
+            reply_markup=InlineKeyboardMarkup(buttons),
+            disable_web_page_preview=True
+        )
+    except MessageNotModified:
+        pass

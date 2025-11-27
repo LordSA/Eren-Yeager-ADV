@@ -5,7 +5,7 @@ import time
 import random
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from plugins.Tools.help_func.cust_p_filters import f_owner_filter
+
 
 # -- Constants -- #
 ALIVE = "എന്തിനാടാ start ഉണ്ടാകുമ്പോൾ എന്നെ നേക്കി എൻ്റെ വായിൽ ഉള്ളത് കേൾക്കുന്നത്... എന്നാ പരിപാടിയാ..." 
@@ -15,11 +15,11 @@ REPO_URL = "https://github.com/LordSA/Eren-Yeager-ADV5.2.0"
 # -- Constants End -- #
 
 
-@Client.on_message(filters.command('alive') & f_owner_filter)
+@Client.on_message(filters.command('alive'))
 async def check_alive(_, message):
     await message.reply_text(ALIVE)
 
-@Client.on_message(filters.command('ping') & f_owner_filter)
+@Client.on_message(filters.command('ping'))
 async def ping(_, message):
     start_t = time.time()
     rm = await message.reply_text("...")
@@ -28,7 +28,7 @@ async def ping(_, message):
     await rm.edit(f"Pong!\n{time_taken_s:.3f} ms")
 
 
-@Client.on_message(filters.command('repo') & f_owner_filter)
+@Client.on_message(filters.command('repo'))
 async def repo(_, message):
     buttons = [[
         InlineKeyboardButton('『 Repo 』',url=REPO_URL)

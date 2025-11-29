@@ -592,7 +592,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "nxt1":
         buttons = [[
             InlineKeyboardButton('『𝙼𝚄𝚃𝙴』',callback_data='mute'),
-            InlineKeyboardButton('『𝚁𝙴𝙿𝙾𝚁𝚃』',callback_data='rpt'),
+            InlineKeyboardButton('『𝚂𝙾𝙽𝙶』',callback_data='song'),
+           # InlineKeyboardButton('『𝚁𝙴𝙿𝙾𝚁𝚃』',callback_data='rpt'),
             InlineKeyboardButton('『𝙺𝙸𝙲𝙺』', callback_data='kick')                                                       
         ], [
             InlineKeyboardButton('『𝙵𝚄𝙽』', callback_data='fun'),
@@ -860,6 +861,25 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.MUTE_TXT,
             disable_web_page_preview=True,
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
+        )
+    elif query.data == "song":
+        buttons = [[
+            InlineKeyboardButton('👩‍🦯 𝕭𝙰𝙲𝙺', callback_data='nxt1')
+        ]]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        await query.message.edit_text(
+            text="◾◽◽"
+        )
+        await query.message.edit_text(
+            text="◾◾◽"
+        )
+        await query.message.edit_text(
+            text="◾◾◾"
+        )
+        await query.message.edit_text(
+            text=script.SONG_TXT,
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
         )

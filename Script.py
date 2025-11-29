@@ -106,7 +106,9 @@ these are the extra features of Eren Yeager
 • /id - <code>get id of a specifed user.</code>
 • /info  - <code>get information about a user.</code>
 • /imdb  - <code>get the film information from IMDb source.</code>
-• /search  - <code>get the film information from various sources.</code>"""    
+• /search  - <code>get the film information from various sources.</code>
+• /autoforward  - <code>to forward files from channel to other channel automatically[Admin need to install the plugin].</code>
+• /video  - <code>download the video from youtube.[Admin Needs to install the plugin]</code>"""    
     TGRAPH_TXT = """Help: <b>TELEGRAPH & PASTE</b>
 
 <b>NOTE:</b>
@@ -201,7 +203,7 @@ Helps you to know your ping 🚶🏼‍♂️
 <b>Commands:</b>
 
 • /alive - To check you are alive.
-• /help - To get help(Not Working) 
+• /help - To get help 
 • /ping - To get your ping 
 • /repo - Source Code.
 
@@ -210,6 +212,28 @@ Helps you to know your ping 🚶🏼‍♂️
 • This commands can be used in pms and groups
 • This commands can be used buy everyone in the groups and bots pm
 • Share us for more features"""
+    SONG_TXT = """
+<b>🎵 Music Downloader</b>
+
+Download high-quality MP3 songs directly from YouTube with metadata and thumbnails.
+
+<b>🕹 Commands:</b>
+• `/song [Name]`
+• `/mp3 [Name]`
+• `/music [Name]`
+
+<b>📝 How to use:</b>
+1. Type `/song` followed by the song name.
+   <i>Example:</i> <code>/song Believer Imagine Dragons</code>
+2. The bot will search and show the <b>Top 15 results</b>.
+3. Use <b>Next ➡️</b> and <b>⬅️ Back</b> buttons to browse.
+4. Click on a song title to download it instantly.
+
+<b>⚙️ Features:</b>
+• 15 Search Results (Pagination)
+• Auto-Thumbnails & Artist Info
+• No Ads / Fast Download
+"""
     PURGE_TXT = """Help: <b>Purge</b>
 
 Need to delete lots of messages? That's what purges are for!

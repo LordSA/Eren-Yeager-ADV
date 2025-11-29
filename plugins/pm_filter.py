@@ -488,7 +488,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             InlineKeyboardButton('『𝕾𝙴𝙰𝚁𝙲𝙷』', switch_inline_query_current_chat=''),
             InlineKeyboardButton('『𝕾𝚄𝙿𝙿𝙾𝚁𝚃』', url='https://t.me/mwpro11')
         ], [
-            InlineKeyboardButton('『𝙲𝙷𝙰𝙽𝙽𝙴𝙻』', url='https://t.me/+Sw4QUQp-kIU1NjY1')
+            InlineKeyboardButton('『𝙲𝙷𝙰𝙽𝙽𝙴𝙻』', url='https://t.me/+2ZIFxHaOL8UzYjk1')
  #           InlineKeyboardButton('『𝙶𝚁𝙾𝚄𝙿』', url='https://t.me/mwmoviespro')
         ], [
             InlineKeyboardButton('『𝙷𝙴𝙻𝙿』', callback_data='help'),
@@ -592,7 +592,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "nxt1":
         buttons = [[
             InlineKeyboardButton('『𝙼𝚄𝚃𝙴』',callback_data='mute'),
-            InlineKeyboardButton('『𝚁𝙴𝙿𝙾𝚁𝚃』',callback_data='rpt'),
+            InlineKeyboardButton('『𝚂𝙾𝙽𝙶』',callback_data='song'),
+           # InlineKeyboardButton('『𝚁𝙴𝙿𝙾𝚁𝚃』',callback_data='rpt'),
             InlineKeyboardButton('『𝙺𝙸𝙲𝙺』', callback_data='kick')                                                       
         ], [
             InlineKeyboardButton('『𝙵𝚄𝙽』', callback_data='fun'),
@@ -860,6 +861,25 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.MUTE_TXT,
             disable_web_page_preview=True,
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
+        )
+    elif query.data == "song":
+        buttons = [[
+            InlineKeyboardButton('👩‍🦯 𝕭𝙰𝙲𝙺', callback_data='nxt1')
+        ]]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        await query.message.edit_text(
+            text="◾◽◽"
+        )
+        await query.message.edit_text(
+            text="◾◾◽"
+        )
+        await query.message.edit_text(
+            text="◾◾◾"
+        )
+        await query.message.edit_text(
+            text=script.SONG_TXT,
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
         )

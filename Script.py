@@ -106,7 +106,9 @@ these are the extra features of Eren Yeager
 • /id - <code>get id of a specifed user.</code>
 • /info  - <code>get information about a user.</code>
 • /imdb  - <code>get the film information from IMDb source.</code>
-• /search  - <code>get the film information from various sources.</code>"""    
+• /search  - <code>get the film information from various sources.</code>
+• /autoforward  - <code>to forward files from channel to other channel automatically[Admin need to install the plugin].</code>
+• /video  - <code>download the video from youtube.[Admin Needs to install the plugin]</code>"""    
     TGRAPH_TXT = """Help: <b>TELEGRAPH & PASTE</b>
 
 <b>NOTE:</b>

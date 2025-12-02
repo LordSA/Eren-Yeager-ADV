@@ -98,10 +98,6 @@ async def manual_start(client, message):
     await start_server(client)
     await message.reply_text("✅ Server Started Manually.")
 
-@Client.on_connect
-async def on_startup_server(client):
-    asyncio.create_task(start_server(client))
-
 @Client.on_message(filters.command("stream"))
 async def stream_command_handler(client: Client, message: Message):
     if not message.reply_to_message:

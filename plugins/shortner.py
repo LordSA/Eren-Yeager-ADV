@@ -1,4 +1,3 @@
-import os
 import re
 import aiohttp
 from pyrogram import Client, filters

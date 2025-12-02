@@ -7,10 +7,18 @@ from info import BITLY_KEY
 URL_PATTERN = re.compile(r'(https?://\S+)')
 
 async def get_tinyurl(long_url, alias=None):
-    api_url = f"http://tinyurl.com/api-create.php?url={long_url}"
     if alias:
-        api_url += f"&alias={alias}"
-    
+        api_url = f"https://tinyurl.com/api-create.php?url={long_url}&alias={alias}"
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(api_url) as response:
+                    result = await response.text()
+                    if response.status == 200 and result.startswith("http"):
+                        return result
+        except:
+            pass
+
+    api_url = f"https://tinyurl.com/api-create.php?url={long_url}"
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(api_url) as response:
@@ -19,6 +27,7 @@ async def get_tinyurl(long_url, alias=None):
                     return result
     except:
         pass
+    
     return None
 
 async def get_bitly(long_url, alias=None):
@@ -94,7 +103,7 @@ async def shortener_handler(client, message: Message):
             service = "TinyURL"
 
         if not short_link:
-            return await status_msg.edit(f"❌ **Error:** Could not shorten link.\n(Alias `{alias}` might be taken or API is down)")
+            return await status_msg.edit(f"❌ **Error:** API Down.")
 
         if not short_link.startswith(("http://", "https://")):
              return await status_msg.edit(f"❌ **Shortener Error:**\n`{short_link}`")

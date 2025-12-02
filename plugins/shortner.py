@@ -11,12 +11,15 @@ async def get_tinyurl(long_url, alias=None):
     if alias:
         api_url += f"&alias={alias}"
     
-    async with aiohttp.ClientSession() as session:
-        async with session.get(api_url) as response:
-            result = await response.text()
-            if response.status == 200 and "http" in result:
-                return result
-            return None
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(api_url) as response:
+                result = await response.text()
+                if response.status == 200 and result.startswith("http"):
+                    return result
+    except:
+        pass
+    return None
 
 async def get_bitly(long_url, alias=None):
     headers = {
@@ -24,30 +27,33 @@ async def get_bitly(long_url, alias=None):
         "Content-Type": "application/json"
     }
     
-    async with aiohttp.ClientSession() as session:
-        payload = {"long_url": long_url}
-        async with session.post("https://api-ssl.bitly.com/v4/shorten", json=payload, headers=headers) as response:
-            if response.status not in [200, 201]:
-                return None
-            data = await response.json()
-            short_link = data.get("link")
-            
-        if alias and short_link:
-            bitlink_id = short_link.replace("https://", "").replace("http://", "")
-            custom_bitlink = f"bit.ly/{alias}"
-            
-            custom_payload = {
-                "bitlink_id": bitlink_id,
-                "custom_bitlink": custom_bitlink
-            }
-            
-            async with session.post("https://api-ssl.bitly.com/v4/custom_bitlinks", json=custom_payload, headers=headers) as resp:
-                if resp.status in [200, 201]:
-                    return f"https://{custom_bitlink}"
-                else:
-                    return f"{short_link} (Alias '{alias}' unavailable)"
-                    
-        return short_link
+    try:
+        async with aiohttp.ClientSession() as session:
+            payload = {"long_url": long_url}
+            async with session.post("https://api-ssl.bitly.com/v4/shorten", json=payload, headers=headers) as response:
+                if response.status not in [200, 201]:
+                    return None
+                data = await response.json()
+                short_link = data.get("link")
+                
+            if alias and short_link:
+                bitlink_id = short_link.replace("https://", "").replace("http://", "")
+                custom_bitlink = f"bit.ly/{alias}"
+                
+                custom_payload = {
+                    "bitlink_id": bitlink_id,
+                    "custom_bitlink": custom_bitlink
+                }
+                
+                async with session.post("https://api-ssl.bitly.com/v4/custom_bitlinks", json=custom_payload, headers=headers) as resp:
+                    if resp.status in [200, 201]:
+                        return f"https://{custom_bitlink}"
+                    else:
+                        return short_link
+                        
+            return short_link
+    except:
+        return None
 
 @Client.on_message(filters.command(["short", "shorten"]))
 async def shortener_handler(client, message: Message):
@@ -76,15 +82,22 @@ async def shortener_handler(client, message: Message):
     status_msg = await message.reply_text("🔄 **Shortening...**")
 
     try:
+        short_link = None
+        service = "TinyURL"
+
         if BITLY_KEY:
             short_link = await get_bitly(url, alias)
             service = "Bit.ly"
-        else:
+        
+        if not short_link:
             short_link = await get_tinyurl(url, alias)
             service = "TinyURL"
 
         if not short_link:
-            return await status_msg.edit(f"❌ **Error:** Could not shorten link.\nNote: Custom alias `{alias}` might be taken.")
+            return await status_msg.edit(f"❌ **Error:** Could not shorten link.\n(Alias `{alias}` might be taken or API is down)")
+
+        if not short_link.startswith(("http://", "https://")):
+             return await status_msg.edit(f"❌ **Shortener Error:**\n`{short_link}`")
 
         text = (
             f"✅ **Link Shortened!** ({service})\n\n"

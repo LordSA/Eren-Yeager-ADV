@@ -3,7 +3,7 @@
   <img src="https://telegra.ph/file/7226c9d57dc698158bab2.jpg" alt="Eren Yeager Logo">
 </p>
 
-# 𝙴𝚁𝙴𝙽 𝚈𝙴𝙰𝙶𝙴𝚁 ADV5.2.0
+# 𝙴𝚁𝙴𝙽 𝚈𝙴𝙰𝙶𝙴𝚁 ADV
 
 [![Stars](https://img.shields.io/github/stars/LordSA/Eren-Yeager-ADV?style=flat-square&color=yellow)](https://github.com/LordSA/Eren-Yeager-ADV/stargazers)  
 [![Forks](https://img.shields.io/github/forks/LordSA/Eren-Yeager-ADV?style=flat-square&color=orange)](https://github.com/LordSA/Eren-Yeager-ADV/fork)  

@@ -140,7 +140,7 @@ async def screenshot_callback(client, query: CallbackQuery):
             start_time = duration // 2
             out_file = f"sample_{query.id}.mp4"
             
-            cmd = f'ffmpeg -ss {start_time} -i "{video_url}" -t 10 -c:v libx264 -preset ultrafast -c:a aac -ac 2 "{out_file}" -y'
+            cmd = f'ffmpeg -ss {start_time} -i "{video_url}" -t 10 -map 0:v -map 0:a? -c:v libx264 -preset superfast -c:a aac -ac 2 "{out_file}" -y'
             
             logger.info(f"[SS] Running Video Cut: Start {start_time}s")
             proc = await asyncio.create_subprocess_shell(
@@ -200,6 +200,8 @@ async def screenshot_callback(client, query: CallbackQuery):
                 await query.message.edit("Failed to extract frames.")
             else:
                 await query.message.edit("📤 **Uploading...**")
+                logger.info(f"[SS] Uploading {len(screenshots)} images...")
+                
                 if len(screenshots) == 1:
                     await query.message.reply_photo(screenshots[0], caption=f"📸 **Timestamp:** {timestamps[0]}s")
                 else:
@@ -213,8 +215,8 @@ async def screenshot_callback(client, query: CallbackQuery):
                     await query.message.reply_media_group(album)
                 
                 await query.message.delete()
-                logger.info(f"[SS] Sent {len(screenshots)} screenshots.")
-                
+                logger.info(f"[SS] Successfully sent {len(screenshots)} screenshots to user.")
+
             for img in screenshots:
                 if os.path.exists(img):
                     os.remove(img)

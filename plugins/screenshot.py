@@ -163,12 +163,20 @@ async def screenshot_callback(client, query: CallbackQuery):
         if not screenshots:
             await query.message.edit("Failed to extract frames (Stream Error).")
         else:
-            await query.message.edit("📤 **Uploading...**")
+            await query.message.edit("Uploading...")
+            logger.info(f"[SS] Uploading {len(screenshots)} images...")
+            
             if len(screenshots) == 1:
                 await query.message.reply_photo(screenshots[0], caption=f"📸 **Timestamp:** {timestamps[0]}s")
             else:
-                album = [InputMediaPhoto(img) for img in screenshots]
-                await query.message.reply_media_group(album, caption=f"📸 **{len(screenshots)} Screenshots**")
+                album = []
+                for i, img in enumerate(screenshots):
+                    if i == 0:
+                        album.append(InputMediaPhoto(img, caption=f"📸 **{len(screenshots)} Screenshots**"))
+                    else:
+                        album.append(InputMediaPhoto(img))
+                
+                await query.message.reply_media_group(album)
             
             await query.message.delete()
             logger.info(f"[SS] Successfully sent {len(screenshots)} screenshots to user.")

@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 STREAM_PORT = 8090
 
-@Client.on_message(filters.command(["ss", "screenshot"]))
+@Client.on_message(filters.command(["ss", "screenshot", "sample"]))
 async def screenshot_handler(client, message: Message):
     if not message.reply_to_message:
         return await message.reply_text("Reply to a video.")
@@ -27,6 +27,7 @@ async def screenshot_handler(client, message: Message):
         return await message.reply_text("Not a valid video file.")
 
     video_id = message.reply_to_message.id
+    logger.info(f"[SS] Command received. Target Message ID: {video_id}")
 
     buttons = [
         [
@@ -38,11 +39,14 @@ async def screenshot_handler(client, message: Message):
             InlineKeyboardButton("5", callback_data=f"ss_cnt#5#{video_id}"),
             InlineKeyboardButton("8", callback_data=f"ss_cnt#8#{video_id}"),
             InlineKeyboardButton("10", callback_data=f"ss_cnt#10#{video_id}"),
+        ],
+        [
+            InlineKeyboardButton("🎥 10s Sample Video", callback_data=f"ss_cnt#video#{video_id}")
         ]
     ]
     
     await message.reply_text(
-        "⚡ **Fast Mode:** Select screenshot count:",
+        "⚡ **Select Output:**",
         reply_markup=InlineKeyboardMarkup(buttons)
     )
 
@@ -52,7 +56,7 @@ async def screenshot_callback(client, query: CallbackQuery):
     
     try:
         parts = query.data.split("#")
-        count = int(parts[1])
+        action_type = parts[1]
         video_msg_id = int(parts[2])
         chat_id = query.message.chat.id
         
@@ -130,60 +134,90 @@ async def screenshot_callback(client, query: CallbackQuery):
                 logger.warning(f"[SS] Probe failed: {e}. Defaulting to 10s.")
                 duration = 10
 
-        buffer = max(5, int(duration * 0.1)) 
-        start_time = buffer
-        end_time = duration - buffer
-        
-        if end_time <= start_time:
-            timestamps = [duration // 2] * count
-        else:
-            timestamps = sorted([random.randint(start_time, end_time) for _ in range(count)])
-        
-        logger.info(f"[SS] Target Timestamps: {timestamps}")
-        
-        await query.message.edit(f"📸 **Extracting {count} Frames...**")
-        
-        screenshots = []
-        for i, ts in enumerate(timestamps):
-            out_img = f"ss_{query.id}_{i}.jpg"
-            cmd = f'ffmpeg -ss {ts} -i "{video_url}" -frames:v 1 -q:v 2 "{out_img}" -y'
+        if action_type == "video":
+            await query.message.edit("✂️ **Cutting 10s Clip...**")
             
+            start_time = duration // 2
+            out_file = f"sample_{query.id}.mp4"
+            
+            cmd = f'ffmpeg -ss {start_time} -i "{video_url}" -t 10 -c:v libx264 -preset ultrafast -c:a aac -ac 2 "{out_file}" -y'
+            
+            logger.info(f"[SS] Running Video Cut: Start {start_time}s")
             proc = await asyncio.create_subprocess_shell(
                 cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
             )
             await proc.communicate()
             
-            if os.path.exists(out_img):
-                screenshots.append(out_img)
-
-        await site.stop()
-        await runner.cleanup()
-        logger.info("[SS] Local Stream Server Stopped.")
-
-        if not screenshots:
-            await query.message.edit("Failed to extract frames (Stream Error).")
-        else:
-            await query.message.edit("Uploading...")
-            logger.info(f"[SS] Uploading {len(screenshots)} images...")
+            await site.stop()
+            await runner.cleanup()
             
-            if len(screenshots) == 1:
-                await query.message.reply_photo(screenshots[0], caption=f"📸 **Timestamp:** {timestamps[0]}s")
+            if os.path.exists(out_file):
+                await query.message.edit("📤 **Uploading Video...**")
+                await query.message.reply_video(
+                    video=out_file,
+                    caption=f"🎥 **Sample Clip**\n⏳ 10 Seconds (From {start_time}s)",
+                    duration=10
+                )
+                await query.message.delete()
+                os.remove(out_file)
+                logger.info("[SS] Video sample sent.")
             else:
-                album = []
-                for i, img in enumerate(screenshots):
-                    if i == 0:
-                        album.append(InputMediaPhoto(img, caption=f"📸 **{len(screenshots)} Screenshots**"))
-                    else:
-                        album.append(InputMediaPhoto(img))
-                
-                await query.message.reply_media_group(album)
-            
-            await query.message.delete()
-            logger.info(f"[SS] Successfully sent {len(screenshots)} screenshots to user.")
+                await query.message.edit("❌ Failed to generate video clip.")
+                logger.error("[SS] Video generation failed.")
 
-        for img in screenshots:
-            if os.path.exists(img):
-                os.remove(img)
+        else:
+            count = int(action_type)
+            
+            buffer = max(5, int(duration * 0.1)) 
+            start_time = buffer
+            end_time = duration - buffer
+            
+            if end_time <= start_time:
+                timestamps = [duration // 2] * count
+            else:
+                timestamps = sorted([random.randint(start_time, end_time) for _ in range(count)])
+            
+            logger.info(f"[SS] Target Timestamps: {timestamps}")
+            await query.message.edit(f"📸 **Extracting {count} Frames...**")
+            
+            screenshots = []
+            for i, ts in enumerate(timestamps):
+                out_img = f"ss_{query.id}_{i}.jpg"
+                cmd = f'ffmpeg -ss {ts} -i "{video_url}" -frames:v 1 -q:v 2 "{out_img}" -y'
+                
+                proc = await asyncio.create_subprocess_shell(
+                    cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+                )
+                await proc.communicate()
+                
+                if os.path.exists(out_img):
+                    screenshots.append(out_img)
+
+            await site.stop()
+            await runner.cleanup()
+
+            if not screenshots:
+                await query.message.edit("Failed to extract frames.")
+            else:
+                await query.message.edit("📤 **Uploading...**")
+                if len(screenshots) == 1:
+                    await query.message.reply_photo(screenshots[0], caption=f"📸 **Timestamp:** {timestamps[0]}s")
+                else:
+                    album = []
+                    for i, img in enumerate(screenshots):
+                        if i == 0:
+                            album.append(InputMediaPhoto(img, caption=f"📸 **{len(screenshots)} Screenshots**"))
+                        else:
+                            album.append(InputMediaPhoto(img))
+                    
+                    await query.message.reply_media_group(album)
+                
+                await query.message.delete()
+                logger.info(f"[SS] Sent {len(screenshots)} screenshots.")
+                
+            for img in screenshots:
+                if os.path.exists(img):
+                    os.remove(img)
 
     except Exception as e:
         logger.error(f"[SS] ERROR: {e}")

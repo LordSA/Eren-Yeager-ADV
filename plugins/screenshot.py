@@ -31,8 +31,13 @@ async def screenshot_handler(client, message: Message):
     buttons = [
         [
             InlineKeyboardButton("1", callback_data=f"ss_cnt#1#{video_id}"),
+            InlineKeyboardButton("2", callback_data=f"ss_cnt#2#{video_id}"),
             InlineKeyboardButton("3", callback_data=f"ss_cnt#3#{video_id}"),
+        ],
+        [
             InlineKeyboardButton("5", callback_data=f"ss_cnt#5#{video_id}"),
+            InlineKeyboardButton("8", callback_data=f"ss_cnt#8#{video_id}"),
+            InlineKeyboardButton("10", callback_data=f"ss_cnt#10#{video_id}"),
         ]
     ]
     

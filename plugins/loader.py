@@ -4,6 +4,7 @@ import ast
 import json
 import aiohttp
 import asyncio
+from urllib.parse import urlparse
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from info import ADMINS, PM2_BOT_NAME
@@ -68,7 +69,8 @@ async def install_plugin_handler(client: Client, message: Message):
 
     url = message.command[1]
 
-    if "gist.github.com" in url and "raw" not in url:
+    parsed = urlparse(url)
+    if parsed.hostname == "gist.github.com" and "raw" not in url:
         url = url.rstrip("/") + "/raw"
 
     sts = await message.reply_text("📥 **Fetching plugin...**")

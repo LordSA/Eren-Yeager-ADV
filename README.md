@@ -67,6 +67,8 @@ Create a `.env` file in the root directory (or use an `ecosystem.config.js` file
 ## Deploy
 
 <details><summary>Deploy To VPS</summary>
+
+python version sohuld be 3.10 or below in venv
   
 ```bash
 git clone https://github.com/LordSA/EREN-YEAGER-ADV5.2.0.git

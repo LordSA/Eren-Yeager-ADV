@@ -1,9 +1,11 @@
 from pyrogram import Client, filters
 from info import CHANNELS
 from database.ia_filterdb import save_file
+
 media_filter = filters.document | filters.video | filters.audio
 
 @Client.on_message(filters.chat(CHANNELS) & media_filter)
+@Client.on_channel_post(filters.chat(CHANNELS) & media_filter)
 async def media(bot, message):
     """Media Handler"""
     for file_type in ("document", "video", "audio"):
@@ -12,6 +14,11 @@ async def media(bot, message):
             break
     else:
         return
-    media.file_type = file_type
-    media.caption = message.caption
+
+    # Add missing fields if not present
+    if not hasattr(media, 'file_type'):
+        media.file_type = file_type
+    if not hasattr(media, 'caption'):
+        media.caption = message.caption
+    
     await save_file(media)

@@ -61,14 +61,14 @@ async def next_page(bot, query):
     pre = 'filep' if settings['file_secure'] else 'file'
     btn = []
     for file in files:
-        key = str(uuid.uuid4())[:8]
-        FILE_ID_CACHE[key] = file.file_id
+        file_key = str(uuid.uuid4())[:8]
+        FILE_ID_CACHE[file_key] = file.file_id
         if settings['button']:
             btn.append(
                 [
                     InlineKeyboardButton(
                         text=f"© 『{get_size(file.file_size)}』 {file.file_name}", 
-                        callback_data=f'{pre}#{key}' # Use short key
+                        callback_data=f'{pre}#{file_key}' # Use short key
                     )
                 ]
             )
@@ -77,11 +77,11 @@ async def next_page(bot, query):
                 [
                     InlineKeyboardButton(
                         text=f"© {file.file_name}", 
-                        callback_data=f'{pre}#{key}' # Use short key
+                        callback_data=f'{pre}#{file_key}' # Use short key
                     ),
                     InlineKeyboardButton(
                         text=f"『{get_size(file.file_size)}』",
-                        callback_data=f'{pre}#{key}', # Use short key
+                        callback_data=f'{pre}#{file_key}', # Use short key
                     ),
                 ]
             )

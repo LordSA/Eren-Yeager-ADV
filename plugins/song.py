@@ -41,12 +41,16 @@ async def download_song(client: Client, message: Message, link: str):
             'retries': 10,
             'extractor_args': {
                 'youtube': {
-                    'player_client': ['default', 'ios'],
+                    'player_client': ['android', 'ios'],
                     'skip': ['webpage']
                 }
             },
             'http_headers': {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Origin': 'https://www.youtube.com',
+                'Referer': 'https://www.youtube.com/',
             }
         }
 
@@ -123,7 +127,7 @@ async def song_search_handler(client: Client, message: Message):
             'retries': 10,
             'extractor_args': {
                 'youtube': {
-                    'player_client': ['default', 'ios']
+                    'player_client': ['android', 'ios']
                 }
             }
         }

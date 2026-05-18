@@ -39,6 +39,15 @@ async def download_song(client: Client, message: Message, link: str):
             'noplaylist': True,
             'socket_timeout': 300,
             'retries': 10,
+            'extractor_args': {
+                'youtube': {
+                    'player_client': ['default', 'ios'],
+                    'skip': ['webpage']
+                }
+            },
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+            }
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -112,6 +121,11 @@ async def song_search_handler(client: Client, message: Message):
             'extract_flat': True,
             'socket_timeout': 300,
             'retries': 10,
+            'extractor_args': {
+                'youtube': {
+                    'player_client': ['default', 'ios']
+                }
+            }
         }
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:

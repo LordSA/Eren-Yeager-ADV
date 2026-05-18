@@ -14,92 +14,6 @@ logger = logging.getLogger(__name__)
 DOWNLOAD_LOCATION = "./downloads"
 SEARCH_CACHE = {} 
 
-async def download_song(client: Client, message: Message, link: str):
-    logger.info(f"[SONG] Download initiated for link: {link}")
-    status_msg = await message.reply_text(f"📥 **Downloading...**\n\n`{link}`")
-    
-    try:
-        if not os.path.isdir(DOWNLOAD_LOCATION):
-            os.makedirs(DOWNLOAD_LOCATION)
-        
-        # Use a unique ID for the filename to avoid collisions, especially for non-YT links
-        file_id = str(uuid.uuid4())[:10]
-        output_path = f"{DOWNLOAD_LOCATION}/{file_id}.%(ext)s"
-
-        ydl_opts = {
-            'format': 'bestaudio/best',
-            'outtmpl': output_path,
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            }],
-            'writethumbnail': True,
-            'quiet': True,
-            'noplaylist': True,
-            'socket_timeout': 300,
-            'retries': 10,
-            'extractor_args': {
-                'youtube': {
-                    'player_client': ['android', 'ios'],
-                    'skip': ['webpage']
-                }
-            },
-            'http_headers': {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-                'Accept': '*/*',
-                'Accept-Language': 'en-US,en;q=0.9',
-                'Origin': 'https://www.youtube.com',
-                'Referer': 'https://www.youtube.com/',
-            }
-        }
-
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info_dict = await asyncio.to_thread(ydl.extract_info, link, download=True)
-            
-        file_path = f"{DOWNLOAD_LOCATION}/{file_id}.mp3"
-        title = info_dict.get('title', 'Unknown Song')
-        performer = info_dict.get('uploader', 'Unknown Artist')
-        duration = info_dict.get('duration')
-        
-        thumb_path = f"{DOWNLOAD_LOCATION}/{file_id}.jpg"
-        if not os.path.exists(thumb_path):
-            thumb_path = f"{DOWNLOAD_LOCATION}/{file_id}.webp"
-        if not os.path.exists(thumb_path):
-            thumb_path = None
-
-        logger.info("[SONG] Download complete. Uploading...")
-        await status_msg.edit("📤 **Uploading...**")
-
-        await client.send_audio(
-            chat_id=message.chat.id,
-            audio=file_path,
-            title=title,
-            performer=performer,
-            duration=duration,
-            thumb=thumb_path,
-            caption=f"🎧 **{title}**\nUploaded by {client.me.mention}"
-        )
-
-        logger.info("[SONG] Upload complete.")
-        await status_msg.delete()
-
-    except Exception as e:
-        logger.error(f"[SONG] Download/Upload Failed: {e}")
-        try:
-            await status_msg.edit(f"❌ **Download Failed:**\n`{str(e)}`")
-        except:
-            await message.reply_text(f"❌ **Error:** `{str(e)}`")
-    
-    finally:
-        if 'file_path' in locals() and os.path.exists(file_path):
-            os.remove(file_path)
-            logger.info(f"[SONG] Deleted file: {file_path}")
-        if 'thumb_path' in locals() and thumb_path and os.path.exists(thumb_path):
-            os.remove(thumb_path)
-            logger.info(f"[SONG] Deleted thumb: {thumb_path}")
-
-
 @Client.on_message(filters.command(["song", "mp3", "music"]))
 async def song_search_handler(client: Client, message: Message):
     logger.info(f"[SONG] Search command initiated by {message.from_user.first_name} ({message.from_user.id})")
@@ -108,12 +22,6 @@ async def song_search_handler(client: Client, message: Message):
         return await message.reply_text("❌ **Usage:** `/song [Music Name]`\n\nExample: `/song Believer`")
 
     query = message.text.split(None, 1)[1]
-    
-    # Link detection
-    if query.startswith(("http://", "https://", "www.")):
-        if "instagram.com" in query or "youtube.com" in query or "youtu.be" in query:
-            return await download_song(client, message, query)
-
     m = await message.reply_text("🔎 **Searching for song...**")
     logger.info(f"[SONG] Query: {query}")
 
@@ -123,13 +31,6 @@ async def song_search_handler(client: Client, message: Message):
             'quiet': True,
             'noplaylist': True,
             'extract_flat': True,
-            'socket_timeout': 300,
-            'retries': 10,
-            'extractor_args': {
-                'youtube': {
-                    'player_client': ['android', 'ios']
-                }
-            }
         }
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -216,12 +117,76 @@ async def download_song_callback(client: Client, query: CallbackQuery):
     
     await query.answer("📥 Initializing Download...", show_alert=False)
     
-    vid_id = query.data.split("#")[1]
-    link = f"https://www.youtube.com/watch?v={vid_id}"
+    try:
+        vid_id = query.data.split("#")[1]
+        link = f"https://www.youtube.com/watch?v={vid_id}"
+        
+        status_msg = await query.message.edit(f"📥 **Downloading...**\n\n`{link}`")
+        logger.info(f"[SONG] Download started for: {link}")
+
+        if not os.path.isdir(DOWNLOAD_LOCATION):
+            os.makedirs(DOWNLOAD_LOCATION)
+        
+        output_path = f"{DOWNLOAD_LOCATION}/{vid_id}.%(ext)s"
+
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'outtmpl': output_path,
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+            'writethumbnail': True,
+            'quiet': True,
+            'noplaylist': True,
+        }
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info_dict = await asyncio.to_thread(ydl.extract_info, link, download=True)
+            
+        file_path = f"{DOWNLOAD_LOCATION}/{vid_id}.mp3"
+        title = info_dict.get('title', 'Unknown Song')
+        performer = info_dict.get('uploader', 'Unknown Artist')
+        duration = info_dict.get('duration')
+        
+        thumb_path = f"{DOWNLOAD_LOCATION}/{vid_id}.jpg"
+        if not os.path.exists(thumb_path):
+            thumb_path = f"{DOWNLOAD_LOCATION}/{vid_id}.webp"
+        if not os.path.exists(thumb_path):
+            thumb_path = None
+
+        logger.info("[SONG] Download complete. Uploading...")
+        await status_msg.edit("📤 **Uploading...**")
+
+        await client.send_audio(
+            chat_id=query.message.chat.id,
+            audio=file_path,
+            title=title,
+            performer=performer,
+            duration=duration,
+            thumb=thumb_path,
+            caption=f"🎧 **{title}**\nUploaded by {client.me.mention}"
+        )
+
+        logger.info("[SONG] Upload complete.")
+        await status_msg.delete()
+
+    except Exception as e:
+        logger.error(f"[SONG] Download/Upload Failed: {e}")
+        try:
+            await status_msg.edit(f"❌ **Download Failed:**\n`{str(e)}`")
+        except:
+            await query.message.edit(f"❌ **Error:** `{str(e)}`")
     
-    # Use the new download_song function
-    await download_song(client, query.message, link)
-    
+    finally:
+        if 'file_path' in locals() and os.path.exists(file_path):
+            os.remove(file_path)
+            logger.info(f"[SONG] Deleted file: {file_path}")
+        if 'thumb_path' in locals() and thumb_path and os.path.exists(thumb_path):
+            os.remove(thumb_path)
+            logger.info(f"[SONG] Deleted thumb: {thumb_path}")
+
 @Client.on_callback_query(filters.regex("^close_data"))
 async def close_callback(client, query):
     await query.message.delete()

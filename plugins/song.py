@@ -37,6 +37,8 @@ async def download_song(client: Client, message: Message, link: str):
             'writethumbnail': True,
             'quiet': True,
             'noplaylist': True,
+            'socket_timeout': 300,
+            'retries': 10,
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -108,6 +110,8 @@ async def song_search_handler(client: Client, message: Message):
             'quiet': True,
             'noplaylist': True,
             'extract_flat': True,
+            'socket_timeout': 300,
+            'retries': 10,
         }
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:

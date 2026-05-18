@@ -6,7 +6,8 @@ To ensure the safety of your bot and server, please ensure you are using a suppo
 
 | Version | Status | Description |
 | :--- | :--- | :--- |
-| **v5.2.6** | ✅ **Supported** | Beta Version (Newest Features) |
+| **v5.2.7** | ✅ **Supported** | Beta Version (Newest Features) |
+| **v5.2.6** | ✅ **Supported** | Beta Version |
 | **v5.2.0** | ✅ **Supported** | Refurbished / Stable Version |
 | **v5.1.2** | ⚠️ **Vulnerable** | Buggy / Known issues; update recommended |
 | **v5.1.0** | ❌ **End of Life** | No longer supported |

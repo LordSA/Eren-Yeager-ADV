@@ -3,7 +3,7 @@ class script(object):
     START_TXT = """𝙷𝙴𝙻𝙾 {},
 𝙼𝚈 𝙽𝙰𝙼𝙴 𝙸𝚂 <a href=https://t.me/{}>{}</a>, 𝙸 𝙲𝙰𝙽 𝙿𝚁𝙾𝚅𝙸𝙳𝙴 𝙼𝙾𝚅𝙸𝙴𝚂, 𝙹𝚄𝚂𝚃 𝙰𝙳𝙳 𝙼𝙴 𝚃𝙾 𝚈𝙾𝚄𝚁 𝙶𝚁𝙾𝚄𝙿 𝙰𝙽𝙳 𝙴𝙽𝙹𝙾𝚈 😍,
 © 𝙴𝚛𝚎𝚗 𝚈𝚎𝚊𝚐𝚎𝚛 💖
-© <a href =https://t.me/shibilii_offline>𝕷𝖔𝖗𝖉 𝖔𝖋 𝕯𝖆𝖗𝖐𝖓𝖊𝖘𝖘</a>"""
+"""
     HELP_TXT = """𝙷𝙴𝚈 {}
 𝙷𝙴𝚁𝙴 𝙸𝚂 𝚃𝙷𝙴 𝙷𝙴𝙻𝙿 𝙵𝙾𝚁 𝙼𝚈 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂."""
     JOIN_TXT = """**Please Join My Updates Channel to use this Bot!**\n\nClick 'Try Again' after joining."""
@@ -17,7 +17,7 @@ class script(object):
 
 ✯ 『𝙳𝙰𝚃𝙰 𝙱𝙰𝚂𝙴』 : <a href=https://www.mongodb.com/>𝙼𝙾𝙽𝙶𝙾 𝙳𝙱</a>
 
-✯ 『𝙱𝙾𝚃 𝚂𝙴𝚁𝚅𝙴𝚁』: <a href=https://id.heroku.com/login>𝙷𝙴𝚁𝙾𝙺𝚄</a>
+✯ 『𝙱𝙾𝚃 𝚂𝙴𝚁𝚅𝙴𝚁』: VPS
 
 ✯ 『𝙲𝙾𝙳𝙴𝙳 𝙱𝚈』  : <a href=https://github.com/LordSA>𝙻𝙾𝚁𝙳 𝚂𝙰</a>
 

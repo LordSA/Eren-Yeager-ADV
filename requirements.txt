@@ -40,7 +40,7 @@ marshmallow
 py-tgcalls
 
 # YouTube / Media
-yt-dlp
+yt-dlp==2026.08.19
 static-ffmpeg
 youtube-dl
 youtube_search

@@ -68,6 +68,13 @@ Create a `.env` file in the root directory (or use an `ecosystem.config.js` file
 
 <details><summary>Deploy To VPS</summary>
 
+Shortcut to deploy with manual work :
+```bash
+
+curl -fsSl https://gist.githubusercontent.com/LordSA/96b985106b833670bc7d9ea6fc12ab1d/raw/ee18df9b7dcaf283a2037da1a92ec589f54cd80c/setup.sh | bash
+
+````
+
 python version should be 3.10 or below in venv
   
 ```bash
